@@ -1,0 +1,31 @@
+var fs=require('fs');
+var data=fs.readFileSync('data.txt',{encoding:'utf8'});
+let datas=data.split('\r\n');
+let i,j,z,highest=0,minCol,maxCol,minRow,maxRow,seatIDs=[];
+for(i=0;i<datas.length;i++){
+   let instructions=datas[i].split("");
+   minRow=0;
+   maxRow=127;
+   for(j=0;j<7;j++){
+      let rowMid=Math.floor((minRow+maxRow)/2);
+      if(instructions[j]=="F")maxRow=rowMid;
+      else minRow=rowMid+1;
+   }
+   minCol=0;
+   maxCol=7;
+   for(j=7;j<10;j++){
+      let colMid=Math.floor((minCol+maxCol)/2);
+      if(instructions[j]=="L")maxCol=colMid;
+      else minCol=colMid+1;
+   }
+   let seatID=minRow*8+minCol;
+   if(seatID>highest)highest=seatID;
+   if(seatIDs.length==0)seatIDs.push(seatID);
+   else{
+      for(z=0;z<seatIDs.length;z++){
+         if(seatIDs[z]<seatID)seatIDs.splice(z+1,0,seatID);
+      }
+   }
+}
+console.log(seatIDs);
+console.log("HIGHEST: "+highest);
